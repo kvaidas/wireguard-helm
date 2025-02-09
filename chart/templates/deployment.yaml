@@ -1,0 +1,49 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: wireguard
+  labels:
+    app: wireguard
+spec:
+  selector:
+    matchLabels:
+      app: wireguard
+  template:
+    metadata:
+      labels:
+        app: wireguard
+    spec:
+      hostNetwork: true
+      containers:
+        - name: wireguard
+          image: alpine
+          command:
+            - sh
+            - -c
+            - |
+              apk add iproute2 iptables wireguard-tools-wg wireguard-tools-wg-quick
+              wg-quick up wg0
+              trap 'killall sleep; wg-quick down wg0; exit 0' SIGTERM
+              sleep infinity &
+              wait
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+          ports:
+            - protocol: UDP
+              containerPort: 51820
+          resources:
+            limits:
+              memory: 128Mi
+          volumeMounts:
+            - name: wireguard-config
+              mountPath: "/etc/wireguard/"
+      volumes:
+        - name: wireguard-config
+          secret:
+            secretName: wireguard
+            items:
+              - key: server-config
+                path: wg0.conf

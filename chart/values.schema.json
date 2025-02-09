@@ -1,0 +1,28 @@
+{
+    "$schema": "https://json-schema.org/draft-07/schema#",
+    "properties": {
+        "privateKey": {
+            "description": "Server private key",
+            "type": "string"
+        },
+        "address": {
+            "description": "VPN gateway address and netmask (e.g. 10.20.30.1/24)",
+            "type": "string"
+        },
+        "peers": {
+            "description": "Clients",
+            "type": "object",
+            "properties": {
+                "publicKey": {
+                    "description": "Client public key",
+                    "type": "string"
+                },
+                "ip": {
+                    "description": "Client IP address in VPN network",
+                    "type": "string"
+                }
+            }
+        }
+    },
+    "required": ["privateKey", "address", "peers"]
+}

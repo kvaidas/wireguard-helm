@@ -1,0 +1,7 @@
+apiVersion: v2
+name: wireguard
+version: 0.0.1
+description: A helm chart to deploy Wireguard
+keywords:
+  - wireguard
+home: https://github.com/kvaidas/wireguard-helm
